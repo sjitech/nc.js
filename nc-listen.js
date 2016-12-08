@@ -12,9 +12,11 @@ function show_usage() {
 }
 
 function main(args) {
-  if (!args.length || args[0] === '--help') return show_usage();
+  if (args.length !== 1 || args[0] === '--help') return show_usage();
 
   let [localAddress, localPort] = split_host_port(args[0]);
+  if (localPort != split_host_port.port_s) return console.log('invalid port: ' + split_host_port.port_s);
+
   console.log('Using parameters ' + JSON.stringify({localAddress, localPort}, null, '    '));
 
   net.createServer(function (con) {
@@ -30,14 +32,18 @@ function main(args) {
 
   }).listen({host: localAddress, port: localPort}, function () {
     console.log(`Listening at [${this.address().address}]:${ this.address().port}`);
+
     process.stdin.on('close', () => this.close());
     process.stdin.on('data', buf => buf); //For windows OS: just trigger reading from stdin
+    process.stdin.setMaxListeners(Infinity);
+    process.stdout.setMaxListeners(Infinity);
+
   }).on('error', e => console.log('' + e));
 }
 
 function split_host_port(combo) {
   let m = combo.match(/^(\d+)$|^\[([^\]]*)\]:?(.*)$|^([^:]*):([^:]*)$|^(.*)$/);
-  return [(m[2] || m[4] || m[6] || '').replace(/^\*$/, ''), (m[1] || m[3] || m[5] || '') & 0xffff];
+  return [(m[2] || m[4] || m[6] || '').replace(/^\*$/, ''), (split_host_port.port_s = (m[1] || m[3] || m[5] || '')) & 0xffff];
 }
 
 main(process.argv.slice(2)); //nodejs args is start from the 3rd.
