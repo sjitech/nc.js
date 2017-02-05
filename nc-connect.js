@@ -7,16 +7,17 @@ function show_usage() {
   console.log('Connect to server and show incoming data, send input to server.');
   console.log('Usage:');
   console.log('  nc-connect.js [host:]port');
+  console.log('  nc-connect.js host port');
   console.log('Note:');
   console.log('  IPv6 address must be wrapped by square brackets, e.g. [::1]:8080');
 }
 
 function main(args) {
-  if (args.length !== 1 || args[0] === '--help') return show_usage();
+  if ((args.length !== 1 && args.length !== 2) || args[0] === '--help') return show_usage();
 
-  let [host, port] = split_host_port(args[0]);
-  if (!port) return show_usage();
+  let [host, port] = args.length === 1 ? split_host_port(args[0]) : [args[0], (split_host_port.port_s = args[1]) & 0xffff];
   if (port != split_host_port.port_s) return console.log('invalid port: ' + split_host_port.port_s);
+  if (!port) return show_usage();
 
   console.log('Using parameters ' + JSON.stringify({host, port}, null, '    '));
 

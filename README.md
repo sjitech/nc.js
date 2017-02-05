@@ -14,6 +14,7 @@ A simplified nc(netcat)
 - TCP Server
     ```
     nc-listen.js [localAddress:]port
+    nc-listen.js localAddress port
     ```
     - Listen at a port, wait for connection from clients.
     - Data from standard input will be **send to all clients (like broadcast)**.
@@ -22,6 +23,7 @@ A simplified nc(netcat)
 - TCP Client
     ```
     nc-connect.js [host:]port
+    nc-connect.js host port
     ```
     - Connect to server
     - Data from standard input will be send to server.

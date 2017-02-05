@@ -7,14 +7,15 @@ function show_usage() {
   console.log('Listen at a local port and show incoming data, send input to all clients.');
   console.log('Usage:');
   console.log('  nc-listen.js [localAddress:]port');
+  console.log('  nc-listen.js localAddress port');
   console.log('Note:');
   console.log('  IPv6 address must be wrapped by square brackets, e.g. [::1]:8080');
 }
 
 function main(args) {
-  if (args.length !== 1 || args[0] === '--help') return show_usage();
+  if ((args.length !== 1 && args.length !== 2) || args[0] === '--help') return show_usage();
 
-  let [localAddress, localPort] = split_host_port(args[0]);
+  let [localAddress, localPort] = args.length === 1 ? split_host_port(args[0]) : [args[0], (split_host_port.port_s = args[1]) & 0xffff];
   if (localPort != split_host_port.port_s) return console.log('invalid port: ' + split_host_port.port_s);
 
   console.log('Using parameters ' + JSON.stringify({localAddress, localPort}, null, '    '));

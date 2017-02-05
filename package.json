@@ -1,6 +1,6 @@
 {
   "name": "nc.js",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "A simplified nc(netcat)",
   "bin": {
     "nc-connect.js": "./nc-connect.js",
